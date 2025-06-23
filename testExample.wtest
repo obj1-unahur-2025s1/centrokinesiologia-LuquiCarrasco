@@ -1,9 +1,59 @@
-import example.pepita
+import example.*
 
 describe "group of tests for pepita" {
 
-  test "pepita has initial energy" {
-    assert.equals(100, pepita.energy())
+  const leonardo = new Paciente(edad = 40, fortalezaDolor = 10, fortalezaMuscular = 20)
+  const milena = new Paciente(edad = 3, fortalezaDolor = 30, fortalezaMuscular = 50)
+  const magneto1 = new Magneto(color = "Blanco")
+  const bicicleta1 = new Bicicleta(color = "Rojo")
+  const minitramp1 = new Minitramp(color = "Blanco")
+
+  test "Leonardo puede usar los tres aparatos creados, mientras que Milena puede usar sólo el magneto." {
+    assert.that(leonardo.puedeUsarAparato(magneto1))
+    assert.that(leonardo.puedeUsarAparato(bicicleta1))
+    assert.that(leonardo.puedeUsarAparato(minitramp1))
+    assert.that(milena.puedeUsarAparato(magneto1))
+    assert.notThat(milena.puedeUsarAparato(bicicleta1))
+    assert.notThat(milena.puedeUsarAparato(minitramp1))
   }
+
+  test "Leonardo usa  el magneto y el dolor baja a 9"{
+    leonardo.usarAparato(magneto1)
+    assert.equals(9, leonardo.fortalezaDolor())
+  }
+  
+  test "Después de usar el magneto una vez, el nivel de dolor de Milena baja a 27" {
+    milena.usarAparato(magneto1)
+    assert.equals(27, milena.fortalezaDolor())
+  }
+
+  test "Después de usar la bicicleta una vez, el nivel de dolor de Leonardo baja a 6, y la fortaleza sube a 23" {
+    leonardo.usarAparato(bicicleta1)
+    assert.equals(6, leonardo.fortalezaDolor())
+    assert.equals(23, leonardo.fortalezaMuscular())
+  }
+
+  test "Después de usar el minitramp una vez, la fortaleza de Leonardo sube a 24" {
+    leonardo.usarAparato(minitramp1)
+    assert.equals(24, leonardo.fortalezaMuscular())
+  }
+
+  test "Leonardo añade los aparatos a la rutina , chequea si puede hacer la rutina, Después de hacerla una vez, su nivel de dolor baja a 1.8, y su fortaleza sube a 30 "{
+    leonardo.agregarAparatoARutina(bicicleta1)
+    leonardo.agregarAparatoARutina(minitramp1)
+    leonardo.agregarAparatoARutina(bicicleta1)
+    leonardo.agregarAparatoARutina(magneto1)
+    assert.that(leonardo.puedeHacerRutina())
+    leonardo.hacerRutina()
+    assert.equals(30, leonardo.fortalezaMuscular())
+    assert.equals(1.8, leonardo.fortalezaDolor())
+  }
+
+  test "Milena usa primero un magneto, después una bicicleta, no puede hacer la rutina que tiene asignada" {
+    milena.agregarAparatoARutina(magneto1)
+    milena.agregarAparatoARutina(bicicleta1)
+    assert.notThat(milena.puedeHacerRutina())
+  }
+
 
 }
